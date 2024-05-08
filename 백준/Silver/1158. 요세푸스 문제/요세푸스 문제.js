@@ -11,7 +11,6 @@ let input = fs
 
 const [n, k] = input;
 
-function solution(n, k) {
   let answer = [];
   let count = 0;
   let queue = Array.from({ length: n }, (_, index) => index + 1);
@@ -21,6 +20,4 @@ function solution(n, k) {
     count % k !== 0 ? queue.push(item) : answer.push(item);
   }
   console.log(`<${answer.join(", ")}>`);
-}
 
-solution(n, k)
