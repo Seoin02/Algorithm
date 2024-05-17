@@ -1,31 +1,42 @@
-const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const readline = require('readline');
 
-let input = require("fs").readFileSync(filePath).toString().split("\n");
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-let n = Number(input[0].split(" ")[0]);
-let k = Number(input[0].split(" ")[1]);
-let visited = new Array(100001).fill(0);
-let answer = 0;
+let arr = new Array(100001).fill(0);
+let N, K;
 
-function BFS() {
-  let queue = [];
-  queue.push(n);
-  visited[n] = 1;
-  let start = 0;
-  while (queue.length) {
-    let len = queue.length;
-    for (let i = 0; i < len; i++) {
-      let x = queue.shift();
-      if (x === k) return start;
-      for (let nx of [x - 1, x + 1, x * 2]) {
-        if (nx >= 0 && nx <= 100000 && visited[nx] === 0) {
-          visited[nx] = 1;
-          queue.push(nx);
+rl.question('', (input) => {
+    [N, K] = input.split(' ').map(Number);
+
+    let queue = [];
+    queue.push(N);
+    let crnt;
+
+    while (queue.length > 0) {
+        crnt = queue.shift();
+
+        if (crnt < 0 || crnt > 100000) continue;
+        if (crnt === K) {
+            console.log(arr[crnt]);
+            break;
         }
-      }
+
+        if (crnt - 1 >= 0 && arr[crnt - 1] === 0) {
+            arr[crnt - 1] = arr[crnt] + 1;
+            queue.push(crnt - 1);
+        }
+        if (crnt + 1 <= 100000 && arr[crnt + 1] === 0) {
+            arr[crnt + 1] = arr[crnt] + 1;
+            queue.push(crnt + 1);
+        }
+        if (2 * crnt <= 100000 && arr[2 * crnt] === 0) {
+            arr[2 * crnt] = arr[crnt] + 1;
+            queue.push(2 * crnt);
+        }
     }
-    start++;
-  }
-}
-answer = BFS();
-console.log(answer);
+
+    rl.close();
+});
